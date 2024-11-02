@@ -7,12 +7,21 @@ public class Main {
 
         List<Flight> flights = FlightBuilder.createFlights();
 
-        FlightFilter filter = new FlightFilterImpl(flights);
+        FlightFilterExecutor flightFilterExecutor = new FlightFilterExecutor();
 
-        System.out.println(filter.excludeArrivalBeforeDeparture(flights));
-        System.out.println("-".repeat(100));
-        System.out.println(filter.excludeMoreTwoHoursOnGround(flights));
-        System.out.println("-".repeat(100));
-        System.out.println(filter.excludeDepartureBeforeNow(flights));
+        flightFilterExecutor.addFilter(new ExcludeArrivalBeforeDepartureFilter());
+        System.out.println(flightFilterExecutor.execute(flights));
+
+        flightFilterExecutor.clearListFilters();
+        System.out.println("-".repeat(100) + "\n");
+
+        flightFilterExecutor.addFilter(new ExcludeDepartureBeforeNowFilter());
+        System.out.println(flightFilterExecutor.execute(flights));
+
+        flightFilterExecutor.clearListFilters();
+        System.out.println("-".repeat(100) + "\n");
+
+        flightFilterExecutor.addFilter(new TimeOnGroundFilter(2L));
+        System.out.println(flightFilterExecutor.execute(flights));
     }
 }
